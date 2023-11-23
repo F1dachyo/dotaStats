@@ -6,8 +6,9 @@ from mainstat import statLoad, loadStat
 from searchPlayerById import statLoadById, loadStatById
 
 from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QSplashScreen
 from PyQt5 import QtCore
+from PyQt5.QtGui import QPixmap
 
 import qdarktheme
 
@@ -22,6 +23,10 @@ class MyWidget(QMainWindow):
         self.setWindowTitle('DotaStats')
         self.con = sqlite3.connect('dotastats.sqlite3')
         self.cur = self.con.cursor()
+        splash_pix = QPixmap('icons8-дота-2-gradient-144.icon')
+        splash = QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
+        splash.setWindowOpacity(1)
+        splash.show()
         if open('theme.txt', mode='r').read() == 'Light':
             qdarktheme.setup_theme("auto")
         else:
@@ -32,6 +37,7 @@ class MyWidget(QMainWindow):
             self.statusBar().showMessage('Api Error')
         statLoad(self)
         statLoadById(self)
+        splash.close()
         self.updateStat.clicked.connect(self.upSt)
         self.changeId2.clicked.connect(self.chId2)
         self.updateStat2.clicked.connect(self.upSt2)
